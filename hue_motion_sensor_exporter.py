@@ -105,20 +105,20 @@ class HueMotionSensorCollector():
         metrics = []
         for room, data in sensors.items():
             for key, value in data.items():
-                description = [i['description'] for i in METRICS if key == i['name']][0]
-                metric_type = [i['type'] for i in METRICS if key == i['name']][0]
-                metrics.append({'name': 'hue_motion_sensor_%s' % key.lower(),
-                                'value': int(value),
-                                'description': description,
-                                'type': metric_type,
-                                'room': room})
+                if value is not None:
+                    description = [i['description'] for i in METRICS if key == i['name']][0]
+                    metric_type = [i['type'] for i in METRICS if key == i['name']][0]
+                    metrics.append({'name': 'hue_motion_sensor_%s' % key.lower(),
+                                    'value': int(value),
+                                    'description': description,
+                                    'type': metric_type,
+                                    'room': room})
 
         for metric in metrics:
-            if metric['value'] is not None:
-                labels['room'] = metric['room']
-                prometheus_metric = Metric(metric['name'], metric['description'], metric['type'])
-                prometheus_metric.add_sample(metric['name'], value=metric['value'], labels=labels)
-                yield prometheus_metric
+            labels['room'] = metric['room']
+            prometheus_metric = Metric(metric['name'], metric['description'], metric['type'])
+            prometheus_metric.add_sample(metric['name'], value=metric['value'], labels=labels)
+            yield prometheus_metric
 
     @staticmethod
     def _parse_sensors(sensors):

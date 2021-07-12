@@ -114,10 +114,11 @@ class HueMotionSensorCollector():
                                 'room': room})
 
         for metric in metrics:
-            labels['room'] = metric['room']
-            prometheus_metric = Metric(metric['name'], metric['description'], metric['type'])
-            prometheus_metric.add_sample(metric['name'], value=metric['value'], labels=labels)
-            yield prometheus_metric
+            if metric['value']:
+                labels['room'] = metric['room']
+                prometheus_metric = Metric(metric['name'], metric['description'], metric['type'])
+                prometheus_metric.add_sample(metric['name'], value=metric['value'], labels=labels)
+                yield prometheus_metric
 
     @staticmethod
     def _parse_sensors(sensors):

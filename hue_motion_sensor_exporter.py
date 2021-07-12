@@ -114,7 +114,7 @@ class HueMotionSensorCollector():
                                 'room': room})
 
         for metric in metrics:
-            if metric['value']:
+            if metric['value'] is not None:
                 labels['room'] = metric['room']
                 prometheus_metric = Metric(metric['name'], metric['description'], metric['type'])
                 prometheus_metric.add_sample(metric['name'], value=metric['value'], labels=labels)

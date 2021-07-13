@@ -42,7 +42,8 @@ except ValueError:
     sys.exit(1)
 
 HUE_MOTION_SENSORS = [
-    {'uniqueid': '00:17:88:01:04:b6:e5:df-02-04', 'room': 'Salon'}
+    {'uniqueid': '00:17:88:01:04:b6:e5:df-02-04', 'room': 'Salon'},
+    {'uniqueid': '00:17:88:01:06:f4:a5:9b-02', 'room': 'Véranda'}
 ]
 
 METRICS = [
@@ -124,12 +125,17 @@ class HueMotionSensorCollector():
     def _parse_sensors(sensors):
         '''Parse Sensors'''
         res = defaultdict(dict)
+        unknown_sensors = set()
         for key, value in sensors.items():
             if value['type'] in ['ZLLTemperature', 'ZLLPresence', 'ZLLLightLevel']:
-                room = [
-                        i['room'] for i in HUE_MOTION_SENSORS
-                        if i['uniqueid'] in value['uniqueid']
-                       ][0]
+                try:
+                    room = [
+                            i['room'] for i in HUE_MOTION_SENSORS
+                            if i['uniqueid'] in value['uniqueid']
+                           ][0]
+                except IndexError:
+                    unknown_sensors.add(value['uniqueid'][:-5])
+
                 if value['type'] == 'ZLLTemperature':
                     temperature = value['state']['temperature']
                     res[room]['temperature'] = temperature
@@ -149,6 +155,11 @@ class HueMotionSensorCollector():
                 else:
                     state = 0
                 res[room]['state'] = state
+
+        for unknown_sensor in unknown_sensors:
+            logging.info("Unknown Sensor : %s (uniqueid)", unknown_sensor)
+            logging.info("Please reference it in HUE_MOTION_SENSORS variable.")
+            logging.info("Syntax: {'uniqueid': '%s', 'room': 'Room Name'}", unknown_sensor)
         return res
 
 def main():

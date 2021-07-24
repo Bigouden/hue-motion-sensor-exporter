@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 6,
-  "iteration": 1626168023996,
+  "iteration": 1627110987641,
   "links": [],
   "panels": [
     {
@@ -91,7 +91,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.5",
+      "pluginVersion": "8.0.6",
       "targets": [
         {
           "exemplar": true,
@@ -159,7 +159,7 @@
         "showThresholdMarkers": true,
         "text": {}
       },
-      "pluginVersion": "8.0.5",
+      "pluginVersion": "8.0.6",
       "targets": [
         {
           "exemplar": true,
@@ -232,7 +232,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.5",
+      "pluginVersion": "8.0.6",
       "targets": [
         {
           "exemplar": true,
@@ -307,7 +307,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.5",
+      "pluginVersion": "8.0.6",
       "targets": [
         {
           "exemplar": true,
@@ -396,7 +396,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.5",
+      "pluginVersion": "8.0.6",
       "targets": [
         {
           "exemplar": true,
@@ -464,7 +464,7 @@
         "showThresholdMarkers": true,
         "text": {}
       },
-      "pluginVersion": "8.0.5",
+      "pluginVersion": "8.0.6",
       "targets": [
         {
           "exemplar": true,
@@ -537,7 +537,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.5",
+      "pluginVersion": "8.0.6",
       "targets": [
         {
           "exemplar": true,
@@ -612,7 +612,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.5",
+      "pluginVersion": "8.0.6",
       "targets": [
         {
           "exemplar": true,
@@ -680,7 +680,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 12,
         "x": 0,
         "y": 5
@@ -688,8 +688,12 @@
       "id": 4,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
           "placement": "bottom"
         },
         "tooltip": {
@@ -761,7 +765,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 12,
         "x": 12,
         "y": 5
@@ -769,8 +773,12 @@
       "id": 10,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
           "placement": "bottom"
         },
         "tooltip": {
@@ -801,10 +809,10 @@
           },
           "custom": {
             "axisLabel": "",
-            "axisPlacement": "auto",
+            "axisPlacement": "hidden",
             "barAlignment": 0,
-            "drawStyle": "points",
-            "fillOpacity": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -815,7 +823,7 @@
             "lineStyle": {
               "fill": "solid"
             },
-            "lineWidth": 1,
+            "lineWidth": 4,
             "pointSize": 11,
             "scaleDistribution": {
               "type": "linear"
@@ -850,7 +858,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 13
       },
       "id": 12,
       "options": {
@@ -888,7 +896,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "All"
           ],
@@ -919,12 +927,12 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Hue Motion Sensor",
   "uid": "N94o8om7k",
-  "version": 15
+  "version": 18
 }

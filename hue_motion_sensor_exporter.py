@@ -78,7 +78,7 @@ class HueMotionSensorCollector():
 
     def register(self):
         '''Register Exporter On Hue Bridge'''
-        data = {f'devicetype': '{HUE_APP_NAME}'}
+        data = {'devicetype': f'{HUE_APP_NAME}'}
         response = self.session.post(url=self.api_endpoint, json=data)
         while ('error'in response.json()[0]
                and response.json()[0]['error']['description'] == 'link button not pressed'):

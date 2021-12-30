@@ -64,7 +64,7 @@ class HueMotionSensorCollector():
     def __init__(self):
         self.session = requests.session()
         self.host = self.discover()
-        self.api_endpoint = "http://%s/api" % self.host
+        self.api_endpoint = f"http://{self.host}/api"
 
         if not HUE_USERNAME:
             username = self.register()
@@ -78,7 +78,7 @@ class HueMotionSensorCollector():
 
     def register(self):
         '''Register Exporter On Hue Bridge'''
-        data = {'devicetype': '%s' % HUE_APP_NAME}
+        data = {f'devicetype': '{HUE_APP_NAME}'}
         response = self.session.post(url=self.api_endpoint, json=data)
         while ('error'in response.json()[0]
                and response.json()[0]['error']['description'] == 'link button not pressed'):
@@ -94,7 +94,7 @@ class HueMotionSensorCollector():
 
     def sensors(self):
         '''Get Sensors'''
-        url = "%s/%s/sensors" % (self.api_endpoint, HUE_USERNAME)
+        url = f"{self.api_endpoint}/{HUE_USERNAME}/sensors"
         response = self.session.get(url=url)
         return response.json()
 
@@ -109,7 +109,7 @@ class HueMotionSensorCollector():
                 if value is not None:
                     description = [i['description'] for i in METRICS if key == i['name']][0]
                     metric_type = [i['type'] for i in METRICS if key == i['name']][0]
-                    metrics.append({'name': 'hue_motion_sensor_%s' % key.lower(),
+                    metrics.append({'name': f'hue_motion_sensor_{key.lower()}',
                                     'value': int(value),
                                     'description': description,
                                     'type': metric_type,

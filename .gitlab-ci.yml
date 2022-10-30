@@ -1,10 +1,17 @@
 include:
   - project: 'Bigouden/gitlab-ci-templates'
     file: '.gitlab-ci-docker.yml'
+  - project: 'Bigouden/gitlab-ci-templates'
+    file: '.gitlab-ci-prometheus.yml'
+
+variables:
+  HUE_USERNAME: $HUE_USERNAME
 
 stages:
   - Quality
+  - Security
   - Build
+  - Test
   - Inspect
   - Release
   - Clean

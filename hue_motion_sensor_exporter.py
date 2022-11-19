@@ -8,6 +8,8 @@ import os
 import sys
 import time
 from collections import defaultdict
+from datetime import datetime
+import pytz
 import requests
 from prometheus_client.core import REGISTRY, Metric
 from prometheus_client import start_http_server, PROCESS_COLLECTOR, PLATFORM_COLLECTOR
@@ -19,27 +21,41 @@ HUE_MOTION_SENSOR_EXPORTER_NAME = os.environ.get('HUE_MOTION_SENSOR_EXPORTER_NAM
                                                  'hue-motion-sensor-exporter')
 HUE_MOTION_SENSOR_EXPORTER_LOGLEVEL = os.environ.get('HUE_MOTION_SENSOR_LOGLEVEL',
                                                       'INFO').upper()
+HUE_MOTION_SENSOR_EXPORTER_TZ = os.environ.get('TZ', 'Europe/Paris')
 
 # Logging Configuration
 try:
+    pytz.timezone(HUE_MOTION_SENSOR_EXPORTER_TZ)
+    logging.Formatter.converter = lambda *args: \
+                                  datetime.now(tz=\
+                                  pytz.timezone(HUE_MOTION_SENSOR_EXPORTER_TZ)).timetuple()
     logging.basicConfig(stream=sys.stdout,
                         format='%(asctime)s - %(levelname)s - %(message)s',
                         datefmt='%d/%m/%Y %H:%M:%S',
                         level=HUE_MOTION_SENSOR_EXPORTER_LOGLEVEL)
+except pytz.exceptions.UnknownTimeZoneError:
+    logging.Formatter.converter = lambda *args: \
+                                  datetime.now(tz=pytz.timezone('Europe/Paris')).timetuple()
+    logging.basicConfig(stream=sys.stdout,
+                        format='%(asctime)s - %(levelname)s - %(message)s',
+                        datefmt='%d/%m/%Y %H:%M:%S',
+                        level='INFO')
+    logging.error("TZ invalid : %s !", HUE_MOTION_SENSOR_EXPORTER_TZ)
+    os._exit(1)
 except ValueError:
     logging.basicConfig(stream=sys.stdout,
                         format='%(asctime)s - %(levelname)s - %(message)s',
                         datefmt='%d/%m/%Y %H:%M:%S',
                         level='INFO')
     logging.error("DOCKERHUB_LIMIT_EXPORTER_LOGLEVEL invalid !")
-    sys.exit(1)
+    os._exit(1)
 
 # Exporter Configuration
 try:
     HUE_MOTION_SENSOR_EXPORTER_PORT = int(os.environ.get('HUE_MOTION_SENSOR_EXPORTER_PORT', '8123'))
 except ValueError:
     logging.error("HUE_MOTION_SENSOR_EXPORTER_PORT must be int !")
-    sys.exit(1)
+    os._exit(1)
 
 HUE_MOTION_SENSORS = [
     {'uniqueid': '00:17:88:01:04:b6:e5:df-02-04', 'room': 'Salon'},
@@ -69,7 +85,7 @@ class HueMotionSensorCollector():
         if not HUE_USERNAME:
             username = self.register()
             logging.info("Please set 'HUE_USERNAME=%s' environment variable. Exiting.", username)
-            sys.exit(0)
+            os._exit(0)
 
     def discover(self):
         '''Discover Hue Bridge'''
@@ -171,7 +187,7 @@ def main():
     start_http_server(HUE_MOTION_SENSOR_EXPORTER_PORT)
     # Init HueMotionSensorCollector
     REGISTRY.register(HueMotionSensorCollector())
-    # Loop Infinity
+    # Infinite Loop
     while True:
         time.sleep(1)
 

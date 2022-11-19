@@ -27,7 +27,8 @@ HUE_MOTION_SENSOR_EXPORTER_TZ = os.environ.get('TZ', 'Europe/Paris')
 try:
     pytz.timezone(BINANCE_EXPORTER_TZ)
     logging.Formatter.converter = lambda *args: \
-                                  datetime.now(tz=pytz.timezone(HUE_MOTION_SENSOR_EXPORTER_TZ)).timetuple()
+                                  datetime.now(tz=\
+                                  pytz.timezone(HUE_MOTION_SENSOR_EXPORTER_TZ)).timetuple()
     logging.basicConfig(stream=sys.stdout,
                         format='%(asctime)s - %(levelname)s - %(message)s',
                         datefmt='%d/%m/%Y %H:%M:%S',

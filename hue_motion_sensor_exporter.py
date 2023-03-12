@@ -107,6 +107,8 @@ class HueMotionSensorCollector():
             self.username = success['username']
             logging.info("Username: %s", self.username)
             return self.username
+        
+        return False
 
     def sensors(self):
         '''Get Sensors'''

@@ -6,14 +6,14 @@ Exporter Prometheus des indicateurs (présence, luminosité, température, ...) 
 
 ## Variable d'environement
 
-| Variable d'environement | Description | Valeur par défaut |
-| ------ | ------ | ------ |
-| HUE_MOTION_SENSOR_EXPORTER_LOGLEVEL | Niveau de verbosité de l'exporter | INFO |
-| HUE_MOTION_SENSOR_EXPORTER_NAME | Valeur 'job' des métriques remontées | dockerhub-limit-exporter |
-| HUE_MOTION_SENSOR_EXPORTER_PORT | Port d'écoute de l'exporter | 8123 |
-| HUE_USERNAME | Utilisateur Hue Bridge | Vide |
-| HTTP_PROXY | Proxy HTTP  | Vide |
-| HTTPS_PROXY | Proxy HTTPS  | Vide |
+| Variable d'environement             | Description                          | Valeur par défaut        |
+|-------------------------------------|--------------------------------------|--------------------------|
+| HUE_MOTION_SENSOR_EXPORTER_LOGLEVEL | Niveau de verbosité de l'exporter    | INFO                     |
+| HUE_MOTION_SENSOR_EXPORTER_NAME     | Valeur 'job' des métriques remontées | dockerhub-limit-exporter |
+| HUE_MOTION_SENSOR_EXPORTER_PORT     | Port d'écoute de l'exporter          | 8123                     |
+| HUE_USERNAME                        | Utilisateur Hue Bridge               | Vide                     |
+| HTTP_PROXY                          | Proxy HTTP                           | Vide                     |
+| HTTPS_PROXY                         | Proxy HTTPS                          | Vide                     |
 
 ## Format des métriques
 
@@ -39,7 +39,7 @@ hue_motion_sensor_temperature{job="hue-motion-sensor-exporter",room="Salon"} 183
 
 ## Lancement de l'exporter
 
-L'exporter est "packagé" sous forme de conteneur Docker. 
+L'exporter est "packagé" sous forme de conteneur Docker.
 
 Une fois le conteneur construit, il peut être lancé comme suit :
 

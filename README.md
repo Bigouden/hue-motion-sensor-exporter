@@ -6,14 +6,16 @@ Exporter Prometheus des indicateurs (présence, luminosité, température, ...) 
 
 ## Variable d'environement
 
-| Variable d'environement             | Description                          | Valeur par défaut        |
-|-------------------------------------|--------------------------------------|--------------------------|
-| HUE_MOTION_SENSOR_EXPORTER_LOGLEVEL | Niveau de verbosité de l'exporter    | INFO                     |
-| HUE_MOTION_SENSOR_EXPORTER_NAME     | Valeur 'job' des métriques remontées | dockerhub-limit-exporter |
-| HUE_MOTION_SENSOR_EXPORTER_PORT     | Port d'écoute de l'exporter          | 8123                     |
-| HUE_USERNAME                        | Utilisateur Hue Bridge               | Vide                     |
-| HTTP_PROXY                          | Proxy HTTP                           | Vide                     |
-| HTTPS_PROXY                         | Proxy HTTPS                          | Vide                     |
+| Variable d'environement                | Description                          | Valeur par défaut        |
+|----------------------------------------|--------------------------------------|--------------------------|
+| HUE_MOTION_SENSOR_EXPORTER_LOGLEVEL    | Niveau de verbosité de l'exporter    | INFO                     |
+| HUE_MOTION_SENSOR_EXPORTER_NAME        | Valeur 'job' des métriques remontées | dockerhub-limit-exporter |
+| HUE_MOTION_SENSOR_EXPORTER_PORT        | Port d'écoute de l'exporter          | 8123                     |
+| HUE_MOTION_SENSOR_EXPORTER_BRIDGE_HOST | IP ou HOST Hue Bridge                | Vide                     |
+| HUE_MOTION_SENSOR_EXPORTER_BRIDGE_PORT | Port Hue Bridge                      | -1                       |
+| HUE_USERNAME                           | Utilisateur Hue Bridge               | Vide                     |
+| HTTP_PROXY                             | Proxy HTTP                           | Vide                     |
+| HTTPS_PROXY                            | Proxy HTTPS                          | Vide                     |
 
 ## Format des métriques
 
@@ -62,3 +64,4 @@ Un tableau de bord Grafana est disponible dans le répertoire **grafana** et per
 _Capture d'écran :_
 
 ![capture d'écran Grafana](grafana/grafana.png "Capture d'écran Grafana")
+

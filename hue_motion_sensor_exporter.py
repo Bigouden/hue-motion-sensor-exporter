@@ -16,9 +16,12 @@ from wsgiref.simple_server import make_server
 
 import pytz
 import requests
+import urllib3
 from prometheus_client import PLATFORM_COLLECTOR, PROCESS_COLLECTOR
 from prometheus_client.core import REGISTRY, CollectorRegistry, Metric
 from prometheus_client.exposition import _bake_output, _SilentHandler, parse_qs
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 HUE_DISCOVERY_URL = "https://discovery.meethue.com"
 HUE_APP_NAME = "Hue Motion Sensors Prometheus Exporter"
@@ -135,6 +138,18 @@ except ValueError:
     logging.error("HUE_MOTION_SENSOR_EXPORTER_PORT must be int !")
     os._exit(1)
 
+HUE_MOTION_SENSOR_EXPORTER_BRIDGE_HOST = os.environ.get(
+    "HUE_MOTION_SENSOR_EXPORTER_BRIDGE_HOST", None
+)
+
+try:
+    HUE_MOTION_SENSOR_EXPORTER_BRIDGE_PORT = int(
+        os.environ.get("HUE_MOTION_SENSOR_EXPORTER_BRIDGE_PORT", -1)
+    )
+except ValueError:
+    logging.error("HUE_MOTION_SENSOR_EXPORTER_BRIDGE_PORT must be int !")
+
+
 HUE_MOTION_SENSORS = [
     {"uniqueid": "00:17:88:01:04:b6:e5:df-02-04", "room": "Salon"},
     {"uniqueid": "00:17:88:01:06:f4:a5:9b-02", "room": "Véranda"},
@@ -160,7 +175,14 @@ class HueMotionSensorCollector:
     def __init__(self):
         self.session = requests.session()
         self.session.verify = HUE_MOTION_SENSOR_EXPORTER_TLS_VERIFY
-        self.host, self.port = self.discover()
+        if (
+            HUE_MOTION_SENSOR_EXPORTER_BRIDGE_HOST
+            and HUE_MOTION_SENSOR_EXPORTER_BRIDGE_PORT
+        ):
+            self.host = HUE_MOTION_SENSOR_EXPORTER_BRIDGE_HOST
+            self.port = HUE_MOTION_SENSOR_EXPORTER_BRIDGE_PORT
+        else:
+            self.host, self.port = self.discover()
         if self.port == 443:
             method = "https"
         else:
@@ -176,6 +198,14 @@ class HueMotionSensorCollector:
     def discover(self):
         """Discover Hue Bridge"""
         response = self.session.get(HUE_DISCOVERY_URL)
+        if len(response.json()) == 0:
+            logging.error("Unable to discover Hub Bridge !")
+            os._exit(1)
+        if response.status_code != 200:
+            logging.error(
+                "Discovering Hue Bridge failed (status code: %s)", response.status_code
+            )
+            os._exit(1)
         host = response.json()[0]["internalipaddress"]
         port = response.json()[0]["port"]
         return host, port
@@ -297,7 +327,11 @@ def main():
         "HUE_MOTION_SENSOR_EXPORTER_NAME: %s.", HUE_MOTION_SENSOR_EXPORTER_NAME
     )
     # Start Prometheus HTTP Server
-    start_http_server(HUE_MOTION_SENSOR_EXPORTER_PORT)
+    try:
+        start_http_server(HUE_MOTION_SENSOR_EXPORTER_PORT)
+    except OSError as exception:
+        logging.error("%s", exception)
+        os._exit(1)
     # Init HueMotionSensorCollector
     REGISTRY.register(HueMotionSensorCollector())
     # Infinite Loop
